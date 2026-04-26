@@ -1,0 +1,55 @@
+package com.hugotrevizan.exceptions;
+
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.naming.AuthenticationException;
+import java.util.ArrayList;
+import java.util.List;
+
+@ControllerAdvice
+public class ExceptionHandlerController {
+
+    private MessageSource messageSource;
+
+    public ExceptionHandlerController(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<List<ErrorMessageDTO>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        List<ErrorMessageDTO> dto = new ArrayList<>();
+
+        e.getBindingResult().getFieldErrors().forEach(err -> {
+            String message = messageSource.getMessage(err, LocaleContextHolder.getLocale());
+            ErrorMessageDTO error = new ErrorMessageDTO(message, err.getField());
+            dto.add(error);
+        });
+
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UserFoundException.class)
+    public ResponseEntity<Object> handleUserFoundException(UserFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorMessageDTO> handleGenericException(Exception e) {
+        var errorDTO = new ErrorMessageDTO(
+                "Ocorreu um erro interno inesperado.",
+                "internal_server_error"
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDTO);
+    }
+}
