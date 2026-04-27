@@ -1,4 +1,4 @@
-package com.hugotrevizan.modules.company.dto;
+package com.hugotrevizan.modules.company.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

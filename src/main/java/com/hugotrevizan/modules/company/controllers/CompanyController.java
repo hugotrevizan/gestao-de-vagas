@@ -1,6 +1,6 @@
 package com.hugotrevizan.modules.company.controllers;
 
-import com.hugotrevizan.modules.company.dto.CreateCompanyDTO;
+import com.hugotrevizan.modules.company.dtos.CreateCompanyDTO;
 import com.hugotrevizan.modules.company.entities.CompanyEntity;
 import com.hugotrevizan.modules.company.useCases.CreateCompanyUseCase;
 import io.swagger.v3.oas.annotations.Operation;

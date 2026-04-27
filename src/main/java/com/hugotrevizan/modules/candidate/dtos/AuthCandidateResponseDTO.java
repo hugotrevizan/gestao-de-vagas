@@ -1,4 +1,4 @@
-package com.hugotrevizan.modules.company.dto;
+package com.hugotrevizan.modules.candidate.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthCompanyResponseDTO {
+public class AuthCandidateResponseDTO {
 
     private String access_token;
     private Long expires_in;

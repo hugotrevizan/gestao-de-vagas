@@ -1,7 +1,7 @@
 package com.hugotrevizan.modules.candidate.controllers;
 
-import com.hugotrevizan.modules.candidate.dto.AuthCandidateRequestDTO;
-import com.hugotrevizan.modules.candidate.dto.AuthCandidateResponseDTO;
+import com.hugotrevizan.modules.candidate.dtos.AuthCandidateRequestDTO;
+import com.hugotrevizan.modules.candidate.dtos.AuthCandidateResponseDTO;
 import com.hugotrevizan.modules.candidate.useCases.AuthCandidateUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

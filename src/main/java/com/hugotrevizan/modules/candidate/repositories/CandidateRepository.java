@@ -1,4 +1,4 @@
-package com.hugotrevizan.modules.candidate.repository;
+package com.hugotrevizan.modules.candidate.repositories;
 
 import com.hugotrevizan.modules.candidate.entities.CandidateEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

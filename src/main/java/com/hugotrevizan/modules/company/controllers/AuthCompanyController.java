@@ -1,7 +1,7 @@
 package com.hugotrevizan.modules.company.controllers;
 
-import com.hugotrevizan.modules.company.dto.AuthCompanyDTO;
-import com.hugotrevizan.modules.company.dto.AuthCompanyResponseDTO;
+import com.hugotrevizan.modules.company.dtos.AuthCompanyDTO;
+import com.hugotrevizan.modules.company.dtos.AuthCompanyResponseDTO;
 import com.hugotrevizan.modules.company.useCases.AuthCompanyUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,6 +1,6 @@
 package com.hugotrevizan.modules.company.controllers;
 
-import com.hugotrevizan.modules.company.dto.CreateJobDTO;
+import com.hugotrevizan.modules.company.dtos.CreateJobDTO;
 import com.hugotrevizan.modules.company.entities.JobEntity;
 import com.hugotrevizan.modules.company.useCases.CreateJobUseCase;
 import io.swagger.v3.oas.annotations.Operation;

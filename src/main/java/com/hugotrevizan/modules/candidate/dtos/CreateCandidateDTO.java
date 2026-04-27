@@ -1,5 +1,6 @@
-package com.hugotrevizan.modules.candidate.dto;
+package com.hugotrevizan.modules.candidate.dtos;
 
+import com.hugotrevizan.modules.candidate.entities.CandidateEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,4 +25,14 @@ public record CreateCandidateDTO(
 
         @Schema(example = "Desenvolvedor em Java")
         String description
-) {}
+) {
+    public CandidateEntity toEntity(String encodedPassword) {
+        return CandidateEntity.builder()
+                .name(this.name())
+                .username(this.username())
+                .email(this.email())
+                .description(this.description())
+                .password(encodedPassword)
+                .build();
+    }
+}

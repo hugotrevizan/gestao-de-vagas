@@ -1,14 +1,12 @@
 package com.hugotrevizan.modules.candidate.controllers;
 
-import com.hugotrevizan.modules.candidate.dto.CreateCandidateDTO;
-import com.hugotrevizan.modules.candidate.dto.CreateCandidateResponseDTO;
-import com.hugotrevizan.modules.candidate.dto.ProfileCandidateResponseDTO;
-import com.hugotrevizan.modules.candidate.entities.CandidateEntity;
+import com.hugotrevizan.modules.candidate.dtos.CreateCandidateDTO;
+import com.hugotrevizan.modules.candidate.dtos.CreateCandidateResponseDTO;
+import com.hugotrevizan.modules.candidate.dtos.ProfileCandidateResponseDTO;
 import com.hugotrevizan.modules.candidate.useCases.CreateCandidateUseCase;
 import com.hugotrevizan.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import com.hugotrevizan.modules.candidate.useCases.ProfileCandidateUseCase;
-import com.hugotrevizan.modules.company.dto.JobResponseDTO;
-import com.hugotrevizan.modules.company.entities.JobEntity;
+import com.hugotrevizan.modules.company.dtos.JobResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,22 +47,7 @@ public class CandidateController {
             @ApiResponse(responseCode = "400", description = "Erro de validação nos campos ou usuário já existente")
     })
     public ResponseEntity<CreateCandidateResponseDTO> create(@Valid @RequestBody CreateCandidateDTO createCandidateDTO) {
-        var candidateEntity = CandidateEntity.builder()
-                .name(createCandidateDTO.name())
-                .username(createCandidateDTO.username())
-                .email(createCandidateDTO.email())
-                .password(createCandidateDTO.password())
-                .description(createCandidateDTO.description())
-                .build();
-        var result = this.createCandidateUseCase.execute(candidateEntity);
-        var createCandidateResponseDTO = new CreateCandidateResponseDTO(
-                result.getId(),
-                result.getName(),
-                result.getUsername(),
-                result.getEmail(),
-                result.getDescription()
-        );
-        return ResponseEntity.ok().body(createCandidateResponseDTO);
+        return ResponseEntity.ok().body(createCandidateUseCase.execute(createCandidateDTO));
     }
 
     @GetMapping("/")

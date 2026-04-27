@@ -1,7 +1,7 @@
 package com.hugotrevizan.modules.candidate.useCases;
 
-import com.hugotrevizan.modules.candidate.dto.ProfileCandidateResponseDTO;
-import com.hugotrevizan.modules.candidate.repository.CandidateRepository;
+import com.hugotrevizan.modules.candidate.dtos.ProfileCandidateResponseDTO;
+import com.hugotrevizan.modules.candidate.repositories.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

@@ -2,9 +2,9 @@ package com.hugotrevizan.modules.candidate.useCases;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.hugotrevizan.modules.candidate.dto.AuthCandidateResponseDTO;
-import com.hugotrevizan.modules.candidate.dto.AuthCandidateRequestDTO;
-import com.hugotrevizan.modules.candidate.repository.CandidateRepository;
+import com.hugotrevizan.modules.candidate.dtos.AuthCandidateResponseDTO;
+import com.hugotrevizan.modules.candidate.dtos.AuthCandidateRequestDTO;
+import com.hugotrevizan.modules.candidate.repositories.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
