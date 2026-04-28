@@ -1,21 +1,32 @@
 package com.hugotrevizan.modules.company.dtos;
 
+import com.hugotrevizan.modules.company.entities.JobEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-@Data
-public class CreateJobDTO {
+import java.util.UUID;
+
+public record CreateJobDTO (
 
     @Schema(example = "Desenvolvedor(a) Back-end Java Júnior", requiredMode = Schema.RequiredMode.REQUIRED, description = "Título e descrição detalhada da vaga")
     @NotBlank(message = "Esse campo é obrigatório")
-    private String description;
+    String description,
 
     @Schema(example = "Vale Refeição R$ 40/dia, Plano de Saúde completo, Gympass", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Esse campo é obrigatório")
-    private String benefits;
+    String benefits,
 
     @Schema(example = "JUNIOR", requiredMode = Schema.RequiredMode.REQUIRED, description = "Nível de experiência (ex: JUNIOR, PLENO, SENIOR)")
     @NotBlank(message = "Esse campo é obrigatório")
-    private String level;
+    String level
+) {
+    public JobEntity toEntity(String companyId) {
+        return JobEntity.builder()
+                .benefits(this.benefits())
+                .description(this.description())
+                .level(this.level())
+                .companyId(UUID.fromString(companyId))
+                .build();
+    }
 }

@@ -3,7 +3,6 @@ package com.hugotrevizan.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // <-- Não esqueça deste import
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,33 +15,31 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig {
 
     @Autowired
-    private SecurityFilter securityFilter;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Autowired
-    private SecurityCandidateFilter securityCandidateFilter;
-
-    private static final String[] SWAGGER_LIST = {
+    private static final String[] PERMIT_ALL_LIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/v3/api-docs",
-            "/swagger-resources/**",
             "/swagger-ui.html",
-            "/webjars/**"
+            "/v3/api-docs"
     };
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "/candidate/").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/company/").permitAll()
-                            .requestMatchers("/company/auth").permitAll()
-                            .requestMatchers("/candidate/auth").permitAll()
-                            .requestMatchers(SWAGGER_LIST).permitAll();
+
+                    auth.requestMatchers("/candidate/").permitAll();
+                    auth.requestMatchers("/candidate/auth").permitAll();
+                    auth.requestMatchers("/company/").permitAll();
+                    auth.requestMatchers("/company/auth").permitAll();
+                    auth.requestMatchers(PERMIT_ALL_LIST).permitAll();
+
                     auth.anyRequest().authenticated();
                 })
-                .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
+
+                .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class);
+
         return http.build();
     }
 

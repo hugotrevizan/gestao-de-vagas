@@ -6,7 +6,7 @@ import com.hugotrevizan.modules.candidate.dtos.ProfileCandidateResponseDTO;
 import com.hugotrevizan.modules.candidate.useCases.CreateCandidateUseCase;
 import com.hugotrevizan.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import com.hugotrevizan.modules.candidate.useCases.ProfileCandidateUseCase;
-import com.hugotrevizan.modules.company.dtos.JobResponseDTO;
+import com.hugotrevizan.modules.company.dtos.CreateJobResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -62,9 +62,9 @@ public class CandidateController {
             @ApiResponse(responseCode = "401", description = "Token JWT ausente ou inválido")
     })
     public ResponseEntity<ProfileCandidateResponseDTO> get(HttpServletRequest request) {
-        var idCandidate = request.getAttribute("candidate_id");
-        var profile = this.profileCandidateUseCase.execute(idCandidate.toString());
-        return ResponseEntity.ok().body(profile);
+        return ResponseEntity.ok().body(
+                profileCandidateUseCase.execute(request.getAttribute("candidate_id").toString())
+        );
     }
 
     @GetMapping("/job")
@@ -73,21 +73,11 @@ public class CandidateController {
     @SecurityRequirement(name = "jwt_auth")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(array = @ArraySchema(schema = @Schema(implementation = JobResponseDTO.class)))
+                    @Content(array = @ArraySchema(schema = @Schema(implementation = CreateJobResponseDTO.class)))
             }),
             @ApiResponse(responseCode = "401", description = "Token JWT ausente ou inválido")
     })
-    public ResponseEntity<List<JobResponseDTO>> findJobByFilter(@RequestParam String filter) {
-        var jobs = this.listAllJobsByFilterUseCase.execute(filter);
-        var jobResponse = jobs.stream()
-                .map(job -> new JobResponseDTO(
-                        job.getId(),
-                        job.getDescription(),
-                        job.getBenefits(),
-                        job.getLevel(),
-                        job.getCompanyEntity().getName()
-                ))
-                .toList();
-        return ResponseEntity.ok().body(jobResponse);
+    public ResponseEntity<List<CreateJobResponseDTO>> findJobByFilter(@RequestParam String filter) {
+        return ResponseEntity.ok().body(listAllJobsByFilterUseCase.execute(filter));
     }
 }

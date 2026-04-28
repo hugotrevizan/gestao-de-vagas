@@ -37,7 +37,6 @@ public class AuthCompanyController {
             @ApiResponse(responseCode = "401", description = "Username ou senha incorretos")
     })
     public ResponseEntity<AuthCompanyResponseDTO> create(@RequestBody @Valid AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
-        var result = this.authCompanyUseCase.execute(authCompanyDTO);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(authCompanyUseCase.execute(authCompanyDTO));
     }
 }

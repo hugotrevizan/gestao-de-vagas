@@ -1,5 +1,6 @@
 package com.hugotrevizan.modules.company.dtos;
 
+import com.hugotrevizan.modules.company.entities.CompanyEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -30,4 +31,15 @@ public record CreateCompanyDTO(
 
         @Schema(example = "Empresa de tecnologia")
         String description
-) {}
+) {
+    public CompanyEntity toEntity(String encodedPassword) {
+        return CompanyEntity.builder()
+                .name(this.name())
+                .username(this.username())
+                .email(this.email())
+                .password(encodedPassword)
+                .website(this.website())
+                .description(this.description())
+                .build();
+    }
+}

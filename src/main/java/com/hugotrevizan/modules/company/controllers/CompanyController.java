@@ -1,7 +1,7 @@
 package com.hugotrevizan.modules.company.controllers;
 
 import com.hugotrevizan.modules.company.dtos.CreateCompanyDTO;
-import com.hugotrevizan.modules.company.entities.CompanyEntity;
+import com.hugotrevizan.modules.company.dtos.CreateCompanyResponseDTO;
 import com.hugotrevizan.modules.company.useCases.CreateCompanyUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,25 +29,11 @@ public class CompanyController {
     @Operation(summary = "Cadastro de empresa", description = "Essa função é responsável por cadastrar uma nova empresa no sistema para que ela possa publicar vagas.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = CompanyEntity.class))
+                    @Content(schema = @Schema(implementation = CreateCompanyResponseDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Empresa ou e-mail já cadastrados")
     })
-    public ResponseEntity<Object> create(@Valid @RequestBody CreateCompanyDTO createCompanyDTO) {
-        try {
-            var companyEntity = CompanyEntity.builder()
-                    .name(createCompanyDTO.name())
-                    .username(createCompanyDTO.username())
-                    .email(createCompanyDTO.email())
-                    .password(createCompanyDTO.password())
-                    .website(createCompanyDTO.website())
-                    .description(createCompanyDTO.description())
-                    .build();
-
-            var result = this.createCompanyUseCase.execute(companyEntity);
-            return ResponseEntity.ok().body(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<CreateCompanyResponseDTO> create(@Valid @RequestBody CreateCompanyDTO createCompanyDTO) {
+        return ResponseEntity.ok().body(createCompanyUseCase.execute(createCompanyDTO));
     }
 }

@@ -15,17 +15,8 @@ public class ProfileCandidateUseCase {
     private CandidateRepository candidateRepository;
 
     public ProfileCandidateResponseDTO execute(String idCandidate) {
-        var candidate = this.candidateRepository.findById(UUID.fromString(idCandidate))
-            .orElseThrow(() -> {
-                throw new UsernameNotFoundException("User not found");
-        });
-        var candidateDTO = ProfileCandidateResponseDTO.builder()
-        .description(candidate.getDescription())
-        .username(candidate.getUsername())
-        .email(candidate.getEmail())
-        .name(candidate.getName())
-        .id(candidate.getId())
-        .build();
-        return candidateDTO;
+        var candidate = candidateRepository.findById(UUID.fromString(idCandidate))
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return ProfileCandidateResponseDTO.fromEntity(candidate);
     }
 }

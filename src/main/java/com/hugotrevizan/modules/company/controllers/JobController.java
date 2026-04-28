@@ -1,7 +1,7 @@
 package com.hugotrevizan.modules.company.controllers;
 
 import com.hugotrevizan.modules.company.dtos.CreateJobDTO;
-import com.hugotrevizan.modules.company.entities.JobEntity;
+import com.hugotrevizan.modules.company.dtos.CreateJobResponseDTO;
 import com.hugotrevizan.modules.company.useCases.CreateJobUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/company/job")
 @Tag(name = "Vagas", description = "Operações de criação e listagem de vagas por parte da empresa")
@@ -36,23 +34,11 @@ public class JobController {
     @SecurityRequirement(name = "jwt_auth")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = JobEntity.class))
+                    @Content(schema = @Schema(implementation = CreateJobResponseDTO.class))
             }),
             @ApiResponse(responseCode = "401", description = "Token JWT inválido ou ausente")
     })
-    public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
-        var companyId = request.getAttribute("company_id");
-        try {
-            var jobEntity = JobEntity.builder()
-                    .benefits(createJobDTO.getBenefits())
-                    .description(createJobDTO.getDescription())
-                    .level(createJobDTO.getLevel())
-                    .id(UUID.fromString(companyId.toString()))
-                    .build();
-            var result = this.createJobUseCase.execute(jobEntity);
-            return ResponseEntity.ok().body(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<CreateJobResponseDTO> create(@Valid @RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
+        return ResponseEntity.ok().body(createJobUseCase.execute(createJobDTO, request));
     }
 }

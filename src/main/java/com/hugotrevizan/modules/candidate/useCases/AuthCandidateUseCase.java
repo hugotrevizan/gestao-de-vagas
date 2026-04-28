@@ -1,12 +1,10 @@
 package com.hugotrevizan.modules.candidate.useCases;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.hugotrevizan.modules.candidate.dtos.AuthCandidateResponseDTO;
 import com.hugotrevizan.modules.candidate.dtos.AuthCandidateRequestDTO;
+import com.hugotrevizan.modules.candidate.dtos.AuthCandidateResponseDTO;
 import com.hugotrevizan.modules.candidate.repositories.CandidateRepository;
+import com.hugotrevizan.providers.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,40 +17,27 @@ import java.util.List;
 @Service
 public class AuthCandidateUseCase {
 
-    @Value("${security.token.secret.candidate}")
-    private String secretKey;
-
     @Autowired
     private CandidateRepository candidateRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public AuthCandidateResponseDTO execute(AuthCandidateRequestDTO authCandidateRequestDTO) throws AuthenticationException {
+    @Autowired
+    private TokenService tokenService;
 
-        var candidate = this.candidateRepository.findByUsername(authCandidateRequestDTO.username())
+    public AuthCandidateResponseDTO execute(AuthCandidateRequestDTO authCandidateRequestDTO) throws AuthenticationException {
+        var candidate = candidateRepository.findByUsername(authCandidateRequestDTO.username())
                 .orElseThrow(() -> new UsernameNotFoundException("Username/password incorrect"));
 
-        var passwordMatches = this.passwordEncoder
-                .matches(authCandidateRequestDTO.password(), candidate.getPassword());
-
+        var passwordMatches = passwordEncoder.matches(authCandidateRequestDTO.password(), candidate.getPassword());
         if (!passwordMatches) {
             throw new AuthenticationException("Username/password incorrect");
         }
 
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        var expiresIn = Instant.now().plus(Duration.ofMinutes(10));
+        var token = tokenService.generateToken(candidate.getId().toString(), List.of("CANDIDATE"));
+        var expiresIn = Instant.now().plus(Duration.ofHours(2)).toEpochMilli();
 
-        var token = JWT.create()
-                .withIssuer("javagas")
-                .withSubject(candidate.getId().toString())
-                .withClaim("roles", List.of("CANDIDATE"))
-                .withExpiresAt(expiresIn)
-                .sign(algorithm);
-
-        return AuthCandidateResponseDTO.builder()
-                .access_token(token)
-                .expires_in(expiresIn.toEpochMilli())
-                .build();
+        return new AuthCandidateResponseDTO(token, expiresIn);
     }
 }

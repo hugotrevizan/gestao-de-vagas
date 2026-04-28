@@ -19,9 +19,7 @@ public class CreateCandidateUseCase {
 
     public CreateCandidateResponseDTO execute(CreateCandidateDTO createCandidateDTO) {
         candidateRepository.findByUsernameOrEmail(createCandidateDTO.username(), createCandidateDTO.email())
-                .ifPresent((user) -> {
-                    throw new UserFoundException();
-                });
+                .ifPresent((user) -> new UserFoundException());
         var passwordHash = passwordEncoder.encode(createCandidateDTO.password());
         var candidateEntity = createCandidateDTO.toEntity(passwordHash);
         var candidateSaved = candidateRepository.save(candidateEntity);
