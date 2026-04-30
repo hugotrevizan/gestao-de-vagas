@@ -58,7 +58,7 @@ desenvolvimento.
 
 1. **Clone o repositório:**
 
-```bash
+bash
 git clone [https://github.com/seu-usuario/gestao-de-vagas.git](https://github.com/seu-usuario/gestao-de-vagas.git)
 cd gestao-de-vagas
 
@@ -66,7 +66,7 @@ cd gestao-de-vagas
 
 Utilize o comando abaixo para iniciar o contêiner do banco de dados definido no arquivo docker-compose.yml. Isso garantirá que o ambiente de dados esteja pronto para a aplicação.
 
-```bash
+bash
 docker-compose up -d
 O banco de dados estará rodando na porta 5432. As credenciais e o nome do banco seguem as definições configuradas no arquivo application.properties da aplicação.
 
